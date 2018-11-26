@@ -1,0 +1,33 @@
+{
+  "name": "@starbase/auth",
+  "version": "0.0.1",
+  "description": "Starbase Authentication",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "auth",
+    "authentication",
+    "authorization",
+    "jwt",
+    "starbase"
+  ],
+  "author": "Mike Fuller",
+  "license": "MIT",
+  "dependencies": {
+    "@starbase/channels": "latest",
+    "@starbase/database": "latest",
+    "@starbase/therules": "latest",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^8.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/starbasealpha/auth.git"
+  },
+  "bugs": {
+    "url": "https://github.com/starbasealpha/auth/issues"
+  },
+  "homepage": "https://github.com/starbasealpha/auth#readme"
+}
