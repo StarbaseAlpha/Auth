@@ -16,8 +16,6 @@
   "author": "Mike Fuller",
   "license": "MIT",
   "dependencies": {
-    "@starbase/channels": "latest",
-    "@starbase/database": "latest",
     "@starbase/therules": "latest",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^8.4.0"
