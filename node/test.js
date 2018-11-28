@@ -1,11 +1,14 @@
 'use strict';
 
 const Auth = require('./auth');
+const Database = require('@starbase/database');
+const Channels = require('@starbase/channels');
 
-const auth = Auth({
-  'dbPath':'./authdb',
-  'secret':'secretpassword'
-});
+const database = Database('authtestdb');
+const db = Channels(database);
+
+const secret = "LONGSECRETSTRING";
+const auth = Auth(db,secret);
 
 var credentials = {
   "username": "mike",
@@ -47,7 +50,7 @@ setTimeout(()=>{
 
             console.log('deleted: ', deleted);
 
-            auth.deleteDB().then(console.log);
+            database.deleteDB().then(console.log);
 
           }).catch(console.log);
         }).catch(console.log);

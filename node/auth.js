@@ -1,31 +1,31 @@
 'use strict';
 
-const Database = require('@starbase/database');
-const Channels = require('@starbase/channels');
 const theRules = require('@starbase/therules');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const rules = require(__dirname + path.sep + 'authrules');
+const rules = require(__dirname + path.sep + '..' + path.sep + 'rules');
 
-function Auth(settings={}) {
-  if (!settings || typeof settings !== 'object') {
-    settings = {};
+function Auth(db, secret, options={}) {
+  if (!options || typeof options !== 'object') {
+    options = {};
   }
 
-  let SECRET = settings.secret || null;
-  let dbPath = settings.dbPath || null;
-  let accessTokenExpires = settings.accessTokenExpires || parseInt(1000 * 60 * 10);
-  let refreshTokenExpires = settings.refreshTokenExpires || parseInt(1000 * 60 * 60 * 24 * 7); 
-  let passwordRounds = settings.passwordRounds || 8;
+  let SECRET = (secret || '').toString();
 
-  let db = null;
-  let database = null;
-  if (dbPath && typeof dbPath === 'string') {
-    database = Database(dbPath);
-    db = Channels(database);
+  if (!db) {
+    throw("Starbase Channels Database object is missing.");
   }
+
+  if (!secret || typeof secret !== 'string' || secret.length < 1) {
+    throw("A secret string for token signing is required.");
+  }
+
+  let parentChannel = (options.parentChannel || "/auth/users").toString();
+  let accessTokenExpires = options.accessTokenExpires || parseInt(1000 * 60 * 10);
+  let refreshTokenExpires = options.refreshTokenExpires || parseInt(1000 * 60 * 60 * 24 * 7); 
+  let passwordRounds = options.passwordRounds || 8;
 
   let createToken = async (user) => {
     let newToken = {};
@@ -73,7 +73,7 @@ function Auth(settings={}) {
       });
     }
 
-    let exists = await db.path('/auth/users').path(username).get().catch(err=>{return false;});
+    let exists = await db.path(parentChannel).path(username).get().catch(err=>{return false;});
 
     if (exists) {
       return Promise.reject({
@@ -83,7 +83,7 @@ function Auth(settings={}) {
 
     let hash = await bcrypt.hash(password,passwordRounds);
     let user = {"username":username,"password":hash};
-    return db.path('/auth/users').path(username).put(user).then(result=>{
+    return db.path(parentChannel).path(username).put(user).then(result=>{
       return Promise.resolve({"message":"User created.","user":{"username":username}});
     }).catch(err=>{
       return Promise.reject({"code":400,"message":"Error creating user."});
@@ -96,7 +96,7 @@ function Auth(settings={}) {
     let username = (credentials.username || "").toString().toLowerCase();
     let password = (credentials.password || "").toString();
 
-    let exists = await db.path('/auth/users').path(username).get().catch(err=>{return false;});
+    let exists = await db.path(parentChannel).path(username).get().catch(err=>{return false;});
 
     if (!exists) {
       return Promise.reject({
@@ -112,7 +112,7 @@ function Auth(settings={}) {
       });
     }
 
-    return db.path('/auth/users').path(username).del().then(deleted=>{
+    return db.path(parentChannel).path(username).del().then(deleted=>{
       return Promise.resolve({"message":"User deleted"});
     }).catch(err=>{
       return Promise.reject({
@@ -128,7 +128,7 @@ function Auth(settings={}) {
     let password = (credentials.password || "").toString();
 
 
-    let exists = await db.path('/auth/users').path(username).get().catch(err=>{return false;});
+    let exists = await db.path(parentChannel).path(username).get().catch(err=>{return false;});
 
     if (!exists) {
       return Promise.reject({
@@ -173,7 +173,7 @@ function Auth(settings={}) {
       username = decoded.user.username;
     }
 
-    let exists = await db.path('/auth/users').path(username).get().catch(err=>{return false;});
+    let exists = await db.path(parentChannel).path(username).get().catch(err=>{return false;});
 
     if (!exists) {
       return Promise.reject({
@@ -211,7 +211,7 @@ function Auth(settings={}) {
       });
     }
 
-    let exists = await db.path('/auth/users').path(username).get().catch(err=>{return false;});
+    let exists = await db.path(parentChannel).path(username).get().catch(err=>{return false;});
 
     if (!exists) {
       return Promise.reject({
@@ -228,17 +228,13 @@ function Auth(settings={}) {
     }
 
     let hash = await bcrypt.hash(newPassword,passwordRounds);
-    return db.path('/auth/users').path(exists.data.username).put({
+    return db.path(parentChannel).path(exists.data.username).put({
       "username":exists.data.username,
       "password":hash
     }).then(changed=>{
       return Promise.resolve({"message":"Password changed."});
     });
 
-  };
-
-  auth.deleteDB = () => {
-    return database.deleteDB();
   };
 
   return auth;

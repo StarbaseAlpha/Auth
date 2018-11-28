@@ -1,38 +1,29 @@
 'use strict';
 
-function Auth(serverPath=null,dbPath=null) {
+function Auth(api=null,localDB=null,options={}) {
 
-  let request = (method,credentials) => {
-    return new Promise((resolve,reject) => {
-      fetch(serverPath,{
-        "method":"POST",
-        "headers":{"content-type":"application/json"},
-        "body":JSON.stringify({
-          "path":"/",
-          "method":method,
-          "data":credentials
-        })
-      }).then(response=>{
-        response.json().then(result=>{
-          if (response.status > 399) {
-            return reject(result);
-          } else {
-            return resolve(result);
-          }
-        });
-      });
-    });
+  if (!options || typeof options !== 'object') {
+    options = {};
+  }
+
+  if (!api) {
+    throw('Starbase Channels API Client is missing.');
+  }
+
+  if (!localDB) {
+    throw('Starbase Channels Database is missing.');
+  }
+
+  let db = localDB;
+
+  let request = (path,credentials) => {
+    return api.path(path).put(credentials);
   };
 
-  let db = null;
-  let tokenPath = '/auth/token';
+  let tokenPath = (options.parentChannel || '/auth/token').toString();
   let stateHandler = null;
   let authToken = null;
   let user = null;
-
-  if (dbPath && (typeof Starbase === 'function')) {
-    db = Starbase().Channels(Starbase().Database(dbPath));
-  }
 
   let stateChange = async (token) => {
     if (!token) {
@@ -69,7 +60,7 @@ function Auth(serverPath=null,dbPath=null) {
 
       if (authToken.accessExpires < Date.now()) {
         if (authToken.refreshExpires > Date.now()) {
-          request('refreshToken',authToken).then(result=>{
+          request('/refreshToken',authToken).then(result=>{
             stateChange(result);
             return resolve(result.accessToken);
           }).catch(err=>{
@@ -100,25 +91,25 @@ function Auth(serverPath=null,dbPath=null) {
 
   auth.createUser = (username,password) => {
     return new Promise((resolve,reject) => {
-      request('createUser',{"username":username,"password":password}).then(resolve).catch(reject);
+      request('/createUser',{"username":username,"password":password}).then(resolve).catch(reject);
     });
   };
 
   auth.deleteUser = (username,password) => {
     return new Promise((resolve,reject) => {
-      request('deleteUser',{"username":username,"password":password}).then(resolve).catch(reject);
+      request('/deleteUser',{"username":username,"password":password}).then(resolve).catch(reject);
     });
   };
 
   auth.changePassword = (username,password,newPassword) => {
     return new Promise((resolve,reject) => {
-      request('changePassword',{"username":username,"password":password,"newPassword":newPassword}).then(resolve).catch(reject);
+      request('/changePassword',{"username":username,"password":password,"newPassword":newPassword}).then(resolve).catch(reject);
     });
   };
 
   auth.signIn = (username,password) => {
     return new Promise((resolve,reject) => {
-      request('signIn',{"username":username,"password":password}).then(token=>{
+      request('/signIn',{"username":username,"password":password}).then(token=>{
         stateChange(token);
         resolve(token);
       }).catch(err=>{
