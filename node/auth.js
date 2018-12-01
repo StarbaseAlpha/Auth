@@ -18,7 +18,7 @@ function Auth(db, secret, options={}) {
     throw("Starbase Channels Database object is missing.");
   }
 
-  if (!secret || typeof secret !== 'string' || secret.length < 1) {
+  if (!SECRET || typeof SECRET !== 'string' || SECRET.length < 1) {
     throw("A secret string for token signing is required.");
   }
 
@@ -74,7 +74,6 @@ function Auth(db, secret, options={}) {
     }
 
     let exists = await db.path(parentChannel).path(username).get().catch(err=>{return false;});
-
     if (exists) {
       return Promise.reject({
         "code":409, "message": "Username is unavailable."

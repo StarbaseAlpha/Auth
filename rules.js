@@ -23,79 +23,31 @@ const methods = {
 
 };
 
+const rule = (req,kit,params) =>{
+  return true;
+};
+
 const Rules = [
 
   {
-    "path":"/createUser",
+    "path":"/",
     "methods":{
-      "put":methods.createUser
+      "createUser":methods.createUser,
+      "signIn":methods.signIn,
+      "verifyToken":methods.verifyToken,
+      "deleteUser":methods.deleteUser,
+      "refreshToken":methods.refreshToken,
+      "changePassword":methods.changePassword,
     },
     "rules":{
-      "put":(req,kit,params) => {
-        return true;
-      }
+      "createUser":rule,
+      "deleteUser":rule,
+      "signIn":rule,
+      "verifyToken":rule,
+      "refreshToken":rule,
+      "changePassword":rule
     }
-  },
-
-  {
-    "path":"/deleteUser",
-    "methods":{
-      "put":methods.deleteUser
-    },
-    "rules":{
-      "put":(req,kit,params) => {
-        return true;
-      }
-    }
-  },
-
-  {
-    "path":"/signIn",
-    "methods":{
-      "put":methods.signIn
-    },
-    "rules":{
-      "put":(req,kit,params) => {
-        return true;
-      }
-    }
-  },
-
-  {
-    "path":"/verifyToken",
-    "methods":{
-      "put":methods.verifyToken
-    },
-    "rules":{
-      "put":(req,kit,params) => {
-        return true;
-      }
-    }
-  },
-
-  {
-    "path":"/refreshToken",
-    "methods":{
-      "put":methods.refreshToken
-    },
-    "rules":{
-      "put":(req,kit,params) => {
-        return true;
-      }
-    }
-  },
-
-  {
-    "path":"/changePassword",
-    "methods":{
-      "put":methods.changePassword
-    },
-    "rules":{
-      "put":(req,kit,params) => {
-        return true;
-      }
-    }
-  },
+  }
 
 ];
 

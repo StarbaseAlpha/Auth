@@ -16,8 +16,8 @@ function Auth(api=null,localDB=null,options={}) {
 
   let db = localDB;
 
-  let request = (path,credentials) => {
-    return api.path(path).put(credentials);
+  let request = (method,credentials) => {
+    return api.path('/').request({"method":method,"data":credentials});
   };
 
   let tokenPath = (options.parentChannel || '/auth/token').toString();
@@ -91,25 +91,25 @@ function Auth(api=null,localDB=null,options={}) {
 
   auth.createUser = (username,password) => {
     return new Promise((resolve,reject) => {
-      request('/createUser',{"username":username,"password":password}).then(resolve).catch(reject);
+      request('createUser',{"username":username,"password":password}).then(resolve).catch(reject);
     });
   };
 
   auth.deleteUser = (username,password) => {
     return new Promise((resolve,reject) => {
-      request('/deleteUser',{"username":username,"password":password}).then(resolve).catch(reject);
+      request('deleteUser',{"username":username,"password":password}).then(resolve).catch(reject);
     });
   };
 
   auth.changePassword = (username,password,newPassword) => {
     return new Promise((resolve,reject) => {
-      request('/changePassword',{"username":username,"password":password,"newPassword":newPassword}).then(resolve).catch(reject);
+      request('changePassword',{"username":username,"password":password,"newPassword":newPassword}).then(resolve).catch(reject);
     });
   };
 
   auth.signIn = (username,password) => {
     return new Promise((resolve,reject) => {
-      request('/signIn',{"username":username,"password":password}).then(token=>{
+      request('signIn',{"username":username,"password":password}).then(token=>{
         stateChange(token);
         resolve(token);
       }).catch(err=>{
