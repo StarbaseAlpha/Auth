@@ -126,12 +126,15 @@ function Auth(db, secret, options={}) {
     let username = (credentials.username || "").toString().toLowerCase();
     let password = (credentials.password || "").toString();
 
+    if (!username || !password) {
+      return Promise.reject({"code":400, "message": "Invalid username or password."});
+    }
 
     let exists = await db.path(parentChannel).path(username).get().catch(err=>{return false;});
 
     if (!exists) {
       return Promise.reject({
-        "code":409, "message": "Invalid username or password."
+        "code":400, "message": "Invalid username or password."
       });
     }
 
@@ -163,7 +166,6 @@ function Auth(db, secret, options={}) {
   };
 
   auth.refreshToken = async (credentials) => {
-
     let refreshToken = (credentials.refreshToken || "").toString();
 
     let decoded = jwt.decode(refreshToken);

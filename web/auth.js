@@ -60,7 +60,7 @@ function Auth(api=null,localDB=null,options={}) {
 
       if (authToken.accessExpires < Date.now()) {
         if (authToken.refreshExpires > Date.now()) {
-          request('/refreshToken',authToken).then(result=>{
+          request('refreshToken',authToken).then(result=>{
             stateChange(result);
             return resolve(result.accessToken);
           }).catch(err=>{
