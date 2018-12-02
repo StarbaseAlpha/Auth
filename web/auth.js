@@ -55,6 +55,7 @@ function Auth(api=null,localDB=null,options={}) {
         }
       }
       if (!authToken) {
+        stateChange(null);
         return reject({"code":400,"message":"Invalid or expired token."});
       }
 
