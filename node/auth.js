@@ -99,7 +99,7 @@ function Auth(db, secret, options={}) {
 
     if (!exists) {
       return Promise.reject({
-        "code":409, "message": "Invalid username or password."
+        "code":400, "message": "Invalid username or password."
       });
     }
 
@@ -107,7 +107,7 @@ function Auth(db, secret, options={}) {
 
     if (!verified) {
       return Promise.reject({
-        "code":409, "message": "Invalid username or password."
+        "code":400, "message": "Invalid username or password."
       });
     }
 
@@ -115,7 +115,7 @@ function Auth(db, secret, options={}) {
       return Promise.resolve({"message":"User deleted"});
     }).catch(err=>{
       return Promise.reject({
-        "code":409, "message": "Invalid username or password."
+        "code":400, "message": "Invalid username or password."
       });
     });
 
@@ -178,7 +178,7 @@ function Auth(db, secret, options={}) {
 
     if (!exists) {
       return Promise.reject({
-        "code":409, "message": "User not found."
+        "code":404, "message": "User not found."
       });
     }
 
@@ -216,7 +216,7 @@ function Auth(db, secret, options={}) {
 
     if (!exists) {
       return Promise.reject({
-        "code":409, "message": "User not found."
+        "code":404, "message": "User not found."
       });
     }
 
@@ -224,7 +224,7 @@ function Auth(db, secret, options={}) {
 
     if (!verified) {
       return Promise.reject({
-        "code":409, "message": "Current password is invalid."
+        "code":400, "message": "Current password is invalid."
       });
     }
 
