@@ -55,10 +55,8 @@ function Auth(api=null,localDB=null,options={}) {
         }
       }
       if (!authToken) {
-        stateChange(null);
-        return reject({"code":400,"message":"Invalid or expired token."});
+        return resolve(null);
       }
-
       if (authToken.accessExpires < Date.now()) {
         if (authToken.refreshExpires > Date.now()) {
           request('refreshToken',authToken).then(result=>{
