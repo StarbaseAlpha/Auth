@@ -51,7 +51,7 @@ function Auth(db, secret, options={}) {
       theRules(rules,body,kit).then(result=>{
         res.json(result);
       }).catch(err=>{
-        res.status(err.code||400).json(err);
+        res.status(err.code||400).json({"code":err.code||400,"message":err.message||err.tostring()||"ERROR!"});
       });
     };
   };
@@ -85,7 +85,7 @@ function Auth(db, secret, options={}) {
     return db.path(parentChannel).path(username).put(user).then(result=>{
       return Promise.resolve({"message":"User created.","user":{"username":username}});
     }).catch(err=>{
-      return Promise.reject({"code":400,"message":"Error creating user."});
+      return Promise.reject({"code":400,"message":"Error creating user. " + err.message||err.toString()});
     });
 
   };
