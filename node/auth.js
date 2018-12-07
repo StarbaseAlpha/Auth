@@ -152,7 +152,7 @@ function Auth(db, secret, options={}) {
 
   auth.verifyToken = async (credentials) => {
 
-    let accessToken = (credentials.accessToken || "").toString();
+    let accessToken = (credentials.accessToken || credentials || "").toString();
 
     let valid = false;
     try {
