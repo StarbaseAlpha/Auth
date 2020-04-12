@@ -86,6 +86,7 @@ function Auth(api=null,localDB=null,options={}) {
 
   auth.onStateChange = (cb) => {
     stateHandler = cb;
+    auth.getToken().catch(err=>{});
   };
 
   auth.createUser = (username,password) => {
@@ -123,10 +124,6 @@ function Auth(api=null,localDB=null,options={}) {
       resolve({"message":"Signed out."});
     });
   };
-
-  if (db) {
-    auth.getToken().catch(err=>{});
-  }
 
   return auth;
 
