@@ -1,6 +1,6 @@
 {
   "name": "@starbase/auth",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "Starbase Authentication",
   "main": "index.js",
   "scripts": {
@@ -17,8 +17,8 @@
   "license": "MIT",
   "dependencies": {
     "@starbase/therules": "latest",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^8.4.0"
+    "bcryptjs": "latest",
+    "jsonwebtoken": "latest"
   },
   "repository": {
     "type": "git",
