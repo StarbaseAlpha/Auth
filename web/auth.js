@@ -63,7 +63,9 @@ function Auth(api=null,localDB=null,options={}) {
             stateChange(result);
             return resolve(result.accessToken);
           }).catch(err=>{
-            stateChange(null);
+            if (err.code && err.code < 499) {
+              stateChange(null);
+            }
             return reject(err);
           });
         } else {
