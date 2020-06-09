@@ -2,28 +2,28 @@
 
 const methods = {
 
-  "createUser":(req,kit,params) => {
-    return kit.auth.createUser(req.data);
+  "createUser":(body,kit,params) => {
+    return kit.auth.createUser(body.data);
   },
-  "deleteUser":(req,kit,params) => {
-    return kit.auth.deleteUser(req.data);
+  "deleteUser":(body,kit,params) => {
+    return kit.auth.deleteUser(body.data);
   },
-  "signIn":(req,kit,params) => {
-    return kit.auth.signIn(req.data);
+  "signIn":(body,kit,params) => {
+    return kit.auth.signIn(body.data);
   },
-  "verifyToken":(req,kit,params) => {
-    return kit.auth.verifyToken(req.data);
+  "verifyToken":(body,kit,params) => {
+    return kit.auth.verifyToken(body.data);
   },
-  "refreshToken":(req,kit,params) => {
-    return kit.auth.refreshToken(req.data);
+  "refreshToken":(body,kit,params) => {
+    return kit.auth.refreshToken(body.data);
   },
-  "changePassword":(req,kit,params) => {
-    return kit.auth.changePassword(req.data);
+  "changePassword":(body,kit,params) => {
+    return kit.auth.changePassword(body.data);
   }
 
 };
 
-const rule = (req,kit,params) =>{
+const rule = (body,kit,params) =>{
   return true;
 };
 
